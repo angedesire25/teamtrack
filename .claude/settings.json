@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(composer require *)",
+      "Bash(php artisan *)",
+      "Bash(mysql -u root -e \"CREATE DATABASE IF NOT EXISTS teamtrack CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\")",
+      "Read(//c/laragon/bin/mysql//**)",
+      "Read(//c/laragon/bin/mysql/**)",
+      "Bash(\"/c/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql\" -u root -e \"CREATE DATABASE IF NOT EXISTS teamtrack CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\")",
+      "Bash(\"/c/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql\" -u root -e \"SHOW DATABASES LIKE 'teamtrack';\")",
+      "Bash(composer dump-autoload *)",
+      "Bash(npm run *)",
+      "Bash(xargs cat *)",
+      "Bash(Remove-Item -Path \"c:\\\\laragon\\\\www\\\\teamtrack\\\\storage\\\\framework\\\\views\\\\livewire\" -Recurse -Force -ErrorAction SilentlyContinue)",
+      "Bash(Write-Host \"Livewire view cache cleared\")",
+      "Bash(php -r \"require 'vendor/autoload.php'; echo 'OK';\")",
+      "Bash(python -c \"import sys,json; cmds=[c['name'] for c in json.load\\(sys.stdin\\)['commands']]; print\\('\\\\n'.join\\([c for c in cmds if 'event' in c.lower\\(\\)]\\)\\)\")",
+      "Bash(php -r \"require 'c:/laragon/www/teamtrack/vendor/autoload.php'; echo class_exists\\('Barryvdh\\\\DomPDF\\\\Facade\\\\Pdf'\\) ? 'dompdf ok' : 'no dompdf';\")",
+      "Bash(php -r \"require 'vendor/autoload.php'; echo class_exists\\('Stripe\\\\Stripe'\\) ? 'stripe ok' : 'no stripe';\")"
+    ]
+  }
+}
