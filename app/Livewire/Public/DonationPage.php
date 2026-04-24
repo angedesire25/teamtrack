@@ -15,19 +15,19 @@ class DonationPage extends Component
 {
     public ?DonationCampaign $campaign = null;
 
-    // Montant
+    // Montant du don
     public string $selectedAmount = '';
     public string $customAmount   = '';
     public string $frequency      = 'one_time';
 
-    // Donateur
+    // Informations du donateur
     public string $firstName   = '';
     public string $lastName    = '';
     public string $email       = '';
     public bool   $isAnonymous = false;
     public string $message     = '';
 
-    public bool   $step2 = false; // false = choix montant, true = infos donateur
+    public bool   $step2 = false; // false = choix du montant, true = informations du donateur
 
     protected function rules(): array
     {
@@ -49,7 +49,7 @@ class DonationPage extends Component
                 ->where('is_active', true)
                 ->findOrFail($campaign);
         } else {
-            // Prendre la première campagne active du tenant
+            // Récupérer la première campagne active du tenant
             if (app()->has('tenant')) {
                 $this->campaign = DonationCampaign::where('is_active', true)->first();
             }
@@ -92,7 +92,7 @@ class DonationPage extends Component
         $tenantId  = app()->has('tenant') ? app('tenant')->id : null;
         $currency  = config('services.stripe.currency', 'eur');
 
-        // Créer ou retrouver le donateur
+        // Créer ou retrouver le donateur existant
         $donor = null;
         if (!$this->isAnonymous && $this->email) {
             $donor = Donor::withoutGlobalScope('tenant')
@@ -110,7 +110,7 @@ class DonationPage extends Component
             }
         }
 
-        // Créer la donation en attente
+        // Enregistrer la donation en attente
         $donation = Donation::create([
             'tenant_id'   => $tenantId,
             'campaign_id' => $this->campaign?->id,
@@ -123,13 +123,13 @@ class DonationPage extends Component
             'message'     => $this->message ?: null,
         ]);
 
-        // Créer la session Stripe Checkout
+        // Créer la session Stripe Checkout pour le paiement
         Stripe::setApiKey(config('services.stripe.secret'));
 
         $lineItem = [
             'price_data' => [
                 'currency'     => $currency,
-                'unit_amount'  => (int) round($amount * 100), // Stripe en centimes
+                'unit_amount'  => (int) round($amount * 100), // Stripe attend des centimes
                 'product_data' => [
                     'name' => 'Don — ' . ($this->campaign?->title ?? app('tenant')?->name ?? 'Club'),
                 ],
@@ -137,7 +137,7 @@ class DonationPage extends Component
             'quantity' => 1,
         ];
 
-        // Récurrence : Stripe subscription
+        // Don récurrent : abonnement Stripe
         if ($this->frequency !== 'one_time') {
             $lineItem['price_data']['recurring'] = [
                 'interval' => $this->frequency === 'monthly' ? 'month' : 'year',
@@ -162,10 +162,10 @@ class DonationPage extends Component
 
         $session = StripeSession::create($sessionParams);
 
-        // Sauvegarder l'ID session
+        // Enregistrer l'identifiant de session Stripe
         $donation->update(['stripe_session_id' => $session->id]);
 
-        // Rediriger vers Stripe
+        // Redirection vers la page de paiement Stripe
         $this->redirect($session->url);
     }
 

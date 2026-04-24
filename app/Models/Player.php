@@ -5,6 +5,9 @@ namespace App\Models;
 use App\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Player extends Model
@@ -31,6 +34,16 @@ class Player extends Model
     public function tenant(): BelongsTo   { return $this->belongsTo(Tenant::class); }
     public function category(): BelongsTo { return $this->belongsTo(Category::class); }
     public function team(): BelongsTo     { return $this->belongsTo(Team::class); }
+
+    public function documents(): MorphMany       { return $this->morphMany(Document::class, 'documentable'); }
+    public function injuries(): HasMany          { return $this->hasMany(Injury::class); }
+    public function medicalCertificates(): HasMany { return $this->hasMany(MedicalCertificate::class); }
+    public function medicalClearances(): HasMany  { return $this->hasMany(MedicalClearance::class); }
+
+    public function latestClearance(): HasOne
+    {
+        return $this->hasOne(MedicalClearance::class)->latestOfMany();
+    }
 
     /** Libellé traduit du statut */
     public function statusLabel(): string

@@ -150,7 +150,7 @@
                     sheetBtn.classList.add('hidden');
                 }
 
-                // Position popup
+                // Positionnement de la popup
                 const scrollY = window.scrollY || document.documentElement.scrollTop;
                 pop.style.top  = (rect.bottom + scrollY + 8) + 'px';
                 pop.style.left = Math.min(rect.left, window.innerWidth - 300) + 'px';

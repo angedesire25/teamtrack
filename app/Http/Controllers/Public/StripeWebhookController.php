@@ -26,8 +26,8 @@ class StripeWebhookController extends Controller
         try {
             $event = Webhook::constructEvent($payload, $sigHeader, $secret);
         } catch (SignatureVerificationException $e) {
-            Log::warning('Stripe webhook signature invalid', ['error' => $e->getMessage()]);
-            return response('Invalid signature', 400);
+            Log::warning('Signature du webhook Stripe invalide', ['error' => $e->getMessage()]);
+            return response('Signature invalide', 400);
         }
 
         match ($event->type) {
@@ -57,25 +57,25 @@ class StripeWebhookController extends Controller
             'receipt_number'          => Donation::generateReceiptNumber($donation->tenant_id),
         ]);
 
-        // Mettre à jour le stripe_customer_id du donateur
+        // Mettre à jour le stripe_customer_id du donateur si disponible
         if ($session->customer && $donation->donor_id) {
             $donation->donor?->update(['stripe_customer_id' => $session->customer]);
         }
 
-        // Mettre à jour le montant collecté de la campagne
+        // Incrémenter le montant collecté de la campagne
         if ($donation->campaign_id) {
             DonationCampaign::withoutGlobalScope('tenant')
                 ->where('id', $donation->campaign_id)
                 ->increment('collected_amount', $donation->amount);
         }
 
-        // Envoyer le reçu par email
+        // Envoyer le reçu par e-mail au donateur
         $this->sendReceipt($donation);
     }
 
     private function handleInvoicePaymentSucceeded(object $invoice): void
     {
-        // Paiement récurrent : créer une nouvelle donation
+        // Paiement récurrent : créer une nouvelle entrée de donation
         if (!$invoice->subscription) return;
 
         $parent = Donation::withoutGlobalScope('tenant')
@@ -86,7 +86,7 @@ class StripeWebhookController extends Controller
 
         if (!$parent) return;
 
-        // Éviter les doublons sur le premier paiement (déjà géré par session.completed)
+        // Éviter les doublons sur le premier paiement, déjà traité par l'événement session.completed
         if ($invoice->billing_reason === 'subscription_create') return;
 
         $newDonation = Donation::create([
@@ -114,8 +114,8 @@ class StripeWebhookController extends Controller
 
     private function handleSubscriptionDeleted(object $subscription): void
     {
-        // Marquer les dons récurrents futurs comme annulés (rien à faire en DB pour l'instant)
-        Log::info('Subscription deleted', ['subscription_id' => $subscription->id]);
+        // Abonnement résilié : les futurs dons récurrents sont stoppés (aucune action en base pour l'instant)
+        Log::info('Abonnement Stripe supprimé', ['subscription_id' => $subscription->id]);
     }
 
     private function sendReceipt(Donation $donation): void
@@ -128,7 +128,7 @@ class StripeWebhookController extends Controller
                 Mail::to($email)->send(new DonationReceiptMail($donation));
                 $donation->update(['receipt_sent_at' => now()]);
             } catch (\Exception $e) {
-                Log::error('Failed to send donation receipt', [
+                Log::error('Échec de l\'envoi du reçu de don', [
                     'donation_id' => $donation->id,
                     'error'       => $e->getMessage(),
                 ]);

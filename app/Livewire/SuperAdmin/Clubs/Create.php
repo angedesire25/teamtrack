@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
@@ -36,7 +37,7 @@ class Create extends Component
     #[Validate('nullable|string|max:50')]
     public string $city = '';
 
-    #[Validate('required|string|max:10')]
+    #[Validate('required|string|max:100')]
     public string $country = 'CI';
 
     #[Validate('required|exists:plans,id')]
@@ -67,7 +68,14 @@ class Create extends Component
     /** Enregistre le club et son admin en transaction */
     public function save(): void
     {
-        $this->validate();
+        try {
+            $this->validate();
+        } catch (ValidationException $e) {
+            foreach ($e->validator->errors()->all() as $message) {
+                $this->dispatch('toast', message: $message, type: 'error');
+            }
+            return;
+        }
 
         DB::transaction(function () {
             $tenant = Tenant::create([

@@ -18,7 +18,7 @@ class Index extends Component
     #[Url] public string $filterCategory  = '';
     #[Url] public string $filterCondition = '';
     #[Url] public string $search          = '';
-    #[Url] public string $tab             = 'items'; // items | movements
+    #[Url] public string $tab             = 'items'; // items | movements — onglet actif
 
     // Modal article
     public bool   $showModal = false;
@@ -152,7 +152,7 @@ class Index extends Component
             'notes'              => $this->movementNotes ?: null,
         ]);
 
-        // Mettre à jour le stock disponible
+        // Mise à jour du stock disponible
         match($this->movementType) {
             'in', 'return' => $item->increment('quantity_available', $qty),
             'out'          => $item->decrement('quantity_available', $qty),

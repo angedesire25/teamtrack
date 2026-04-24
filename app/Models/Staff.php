@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Staff extends Model
@@ -22,8 +23,9 @@ class Staff extends Model
         return ['contract_start' => 'date', 'contract_end' => 'date'];
     }
 
-    public function tenant(): BelongsTo { return $this->belongsTo(Tenant::class); }
-    public function user(): BelongsTo   { return $this->belongsTo(User::class); }
+    public function tenant(): BelongsTo    { return $this->belongsTo(Tenant::class); }
+    public function user(): BelongsTo      { return $this->belongsTo(User::class); }
+    public function documents(): MorphMany { return $this->morphMany(Document::class, 'documentable'); }
 
     /** Nombre de jours avant l'expiration du contrat (null si pas de date) */
     public function daysUntilContractEnd(): ?int

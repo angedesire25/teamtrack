@@ -12,7 +12,7 @@ use Livewire\Component;
 class AttendanceSheet extends Component
 {
     public Event $event;
-    public array $attendance = []; // [player_id => 'present'|'absent'|'excused'|'convoked']
+    public array $attendance = []; // [player_id => 'present'|'absent'|'excused'|'convoked'] — présence par joueur
 
     public function mount(int $id): void
     {

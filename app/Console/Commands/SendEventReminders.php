@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Mail;
 class SendEventReminders extends Command
 {
     protected $signature = 'events:send-reminders';
-    protected $description = 'Send email reminders to convoked players 24h before each event';
+    protected $description = 'Envoie des rappels par e-mail aux joueurs convoqués 24h avant chaque événement';
 
     public function handle(): void
     {
@@ -33,11 +33,11 @@ class SendEventReminders extends Command
                 $player = $ep->player;
                 if ($player && $player->email) {
                     Mail::to($player->email)->send(new EventReminderMail($event, $player));
-                    $this->line("Reminder sent to {$player->first_name} {$player->last_name} for event #{$event->id}");
+                    $this->line("Rappel envoyé à {$player->first_name} {$player->last_name} pour l'événement #{$event->id}");
                 }
             }
         }
 
-        $this->info("Done. Processed {$events->count()} event(s).");
+        $this->info("Terminé. {$events->count()} événement(s) traité(s).");
     }
 }

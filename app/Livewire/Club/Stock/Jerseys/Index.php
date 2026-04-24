@@ -19,7 +19,7 @@ class Index extends Component
     #[Url] public string $filterType   = '';
     #[Url] public string $filterSeason = '';
     #[Url] public string $search       = '';
-    #[Url] public string $tab          = 'stock'; // stock | assignments
+    #[Url] public string $tab          = 'stock'; // stock | assignments — onglet actif
 
     // Modal catalogue
     public bool   $showModal = false;

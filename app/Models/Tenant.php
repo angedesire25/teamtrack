@@ -77,6 +77,30 @@ class Tenant extends Model
         return $this->hasMany(Payment::class);
     }
 
+    /** Journal d'activité super admin */
+    public function activityLogs(): HasMany
+    {
+        return $this->hasMany(TenantActivityLog::class);
+    }
+
+    /** Relances de paiement envoyées par le super admin */
+    public function paymentReminders(): HasMany
+    {
+        return $this->hasMany(PaymentReminder::class);
+    }
+
+    /** Utilisations de coupons par ce club */
+    public function couponUses(): HasMany
+    {
+        return $this->hasMany(CouponUse::class);
+    }
+
+    /** Factures émises pour ce club */
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
     // --- Méthodes utilitaires ---
 
     /** Vérifie si le club est en état actif */

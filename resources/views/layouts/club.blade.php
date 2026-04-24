@@ -17,6 +17,8 @@
         .sidebar-bg   { background-color: var(--club-primary); }
         .active-link  { background: rgba(255,255,255,.15); }
         .nav-link:hover { background: rgba(255,255,255,.10); }
+        .sidebar-nav { scrollbar-width: none; -ms-overflow-style: none; }
+        .sidebar-nav::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="h-full font-sans antialiased bg-gray-50 text-gray-900">
@@ -70,7 +72,7 @@
         </div>
 
         {{-- Navigation --}}
-        <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
+        <nav class="sidebar-nav flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
             @php
                 $navItems = [
                     ['route' => 'club.dashboard',    'label' => 'Tableau de bord', 'pattern' => 'dashboard',
@@ -89,6 +91,16 @@
                      'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
                     ['route' => 'club.stock.overview', 'label' => 'Stock', 'pattern' => 'stock*',
                      'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4'],
+                    ['route' => 'club.donations.dashboard', 'label' => 'Dons', 'pattern' => 'donations*',
+                     'icon' => 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'],
+                    ['route' => 'club.transfers.dashboard', 'label' => 'Transferts', 'pattern' => 'transfers*',
+                     'icon' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4'],
+                    ['route' => 'club.finance.dashboard', 'label' => 'Finances', 'pattern' => 'finance*',
+                     'icon' => 'M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z'],
+                    ['route' => 'club.medical.overview', 'label' => 'Médical', 'pattern' => 'medical*',
+                     'icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'],
+                    ['route' => 'club.documents.index', 'label' => 'Documents', 'pattern' => 'documents*',
+                     'icon' => 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z'],
                 ];
             @endphp
 
@@ -157,6 +169,9 @@
             <div class="hidden sm:flex items-center gap-2">
                 <span class="text-xs text-gray-400">{{ $tenant?->subdomain }}.teamtrack.test</span>
             </div>
+
+            {{-- Cloche de notifications --}}
+            <livewire:club.notification-bell />
 
             {{-- Avatar --}}
             <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">

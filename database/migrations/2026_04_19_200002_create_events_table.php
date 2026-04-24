@@ -18,12 +18,12 @@ return new class extends Migration
             $table->foreignId('field_id')->nullable()->constrained('fields')->nullOnDelete();
             $table->foreignId('team_id')->nullable()->constrained('teams')->nullOnDelete();
 
-            // Recurrence
+            // Récurrence
             $table->boolean('is_recurring')->default(false);
             $table->date('recurrence_until')->nullable();
             $table->foreignId('parent_event_id')->nullable()->constrained('events')->cascadeOnDelete();
 
-            // Match-specific
+            // Champs spécifiques aux matchs
             $table->string('competition')->nullable();
             $table->string('opponent')->nullable();
             $table->enum('home_away', ['home', 'away', 'neutral'])->nullable();

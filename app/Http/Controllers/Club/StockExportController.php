@@ -41,7 +41,7 @@ class StockExportController extends Controller
         }
 
         $handle = fopen('php://temp', 'r+');
-        fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF)); // UTF-8 BOM
+        fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF)); // BOM UTF-8
         foreach ($rows as $row) {
             fputcsv($handle, $row, ';');
         }

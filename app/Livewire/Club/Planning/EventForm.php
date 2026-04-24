@@ -27,11 +27,11 @@ class EventForm extends Component
     public string $team_id     = '';
     public string $notes       = '';
 
-    // Recurrence
+    // Récurrence
     public bool   $is_recurring      = false;
     public string $recurrence_until  = '';
 
-    // Match-specific
+    // Données spécifiques aux matchs
     public string $competition = '';
     public string $opponent    = '';
     public string $home_away   = 'home';
@@ -154,16 +154,16 @@ class EventForm extends Component
         } else {
             $event = Event::create($eventData);
 
-            // Generate recurring occurrences for training
+            // Générer les occurrences récurrentes pour les entraînements
             if ($event->is_recurring && $event->recurrence_until && $event->type === 'training') {
                 $this->generateRecurrences($event);
             }
         }
 
-        // Sync convoked players
+        // Synchroniser les joueurs convoqués
         $this->syncConvocations($event, $data['convokedPlayerIds'] ?? []);
 
-        // Send convocation emails if requested
+        // Envoyer les e-mails de convocation si demandé
         if ($this->sendConvocationEmails && !$event->convocations_sent) {
             $this->sendEmails($event);
             $event->update(['convocations_sent' => true]);
@@ -197,13 +197,13 @@ class EventForm extends Component
         $existing = $event->eventPlayers()->pluck('player_id')->map(fn($id) => (string)$id)->toArray();
         $new      = array_map('strval', $playerIds);
 
-        // Remove deselected
+        // Supprimer les joueurs décochés
         $toRemove = array_diff($existing, $new);
         if ($toRemove) {
             EventPlayer::where('event_id', $event->id)->whereIn('player_id', $toRemove)->delete();
         }
 
-        // Add new
+        // Ajouter les nouveaux
         foreach (array_diff($new, $existing) as $playerId) {
             EventPlayer::firstOrCreate([
                 'event_id'  => $event->id,

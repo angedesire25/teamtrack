@@ -11,7 +11,7 @@ use Livewire\Component;
 class MatchSheet extends Component
 {
     public Event $event;
-    public array $lineup = []; // [player_id => ['lineup' => 'starter'|'substitute'|'none', 'position' => '', 'minutes' => '']]
+    public array $lineup = []; // [player_id => ['lineup' => 'starter'|'substitute'|'none', 'position' => '', 'minutes' => '']] — composition du match par joueur
 
     public function mount(int $id): void
     {

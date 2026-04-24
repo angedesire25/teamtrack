@@ -18,12 +18,6 @@
         </a>
     </div>
 
-    @if (session('success'))
-        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm rounded-xl px-4 py-3">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <form wire:submit="save" class="space-y-6">
 
         {{-- ============================================================ --}}
@@ -41,7 +35,6 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Nom du club <span class="text-red-500">*</span></label>
                     <input wire:model.live="name" type="text" placeholder="Ex : AS Abidjan FC"
                            class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E3A5F]/30 focus:border-[#1E3A5F] @error('name') border-red-300 @else border-gray-200 @enderror">
-                    @error('name') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 {{-- Sous-domaine --}}
@@ -52,7 +45,6 @@
                                class="flex-1 px-3 py-2 text-sm focus:outline-none">
                         <span class="px-3 py-2 bg-gray-50 text-gray-500 text-sm border-l border-gray-200">.teamtrack.test</span>
                     </div>
-                    @error('subdomain') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 {{-- Email du club --}}
@@ -60,7 +52,6 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Email du club <span class="text-red-500">*</span></label>
                     <input wire:model="email" type="email" placeholder="contact@club.ci"
                            class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E3A5F]/30 focus:border-[#1E3A5F] @error('email') border-red-300 @else border-gray-200 @enderror">
-                    @error('email') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 {{-- Téléphone --}}
@@ -80,9 +71,53 @@
                 {{-- Pays --}}
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Pays <span class="text-red-500">*</span></label>
-                    <input wire:model="country" type="text" placeholder="CI"
-                           class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E3A5F]/30 focus:border-[#1E3A5F] @error('country') border-red-300 @else border-gray-200 @enderror">
-                    @error('country') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
+                    <select wire:model="country"
+                            class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E3A5F]/30 focus:border-[#1E3A5F] @error('country') border-red-300 @else border-gray-200 @enderror">
+                        <option value="">Choisir un pays…</option>
+                        <option value="BJ">Bénin</option>
+                        <option value="BF">Burkina Faso</option>
+                        <option value="CM">Cameroun</option>
+                        <option value="CF">Centrafrique</option>
+                        <option value="KM">Comores</option>
+                        <option value="CG">Congo</option>
+                        <option value="CD">RD Congo</option>
+                        <option value="CI">Côte d'Ivoire</option>
+                        <option value="DJ">Djibouti</option>
+                        <option value="EG">Égypte</option>
+                        <option value="GA">Gabon</option>
+                        <option value="GM">Gambie</option>
+                        <option value="GH">Ghana</option>
+                        <option value="GN">Guinée</option>
+                        <option value="GW">Guinée-Bissau</option>
+                        <option value="GQ">Guinée Équatoriale</option>
+                        <option value="KE">Kenya</option>
+                        <option value="LR">Liberia</option>
+                        <option value="LY">Libye</option>
+                        <option value="MG">Madagascar</option>
+                        <option value="MW">Malawi</option>
+                        <option value="ML">Mali</option>
+                        <option value="MA">Maroc</option>
+                        <option value="MR">Mauritanie</option>
+                        <option value="MU">Maurice</option>
+                        <option value="MZ">Mozambique</option>
+                        <option value="NA">Namibie</option>
+                        <option value="NE">Niger</option>
+                        <option value="NG">Nigeria</option>
+                        <option value="UG">Ouganda</option>
+                        <option value="RW">Rwanda</option>
+                        <option value="ST">São Tomé-et-Príncipe</option>
+                        <option value="SN">Sénégal</option>
+                        <option value="SL">Sierra Leone</option>
+                        <option value="SO">Somalie</option>
+                        <option value="SD">Soudan</option>
+                        <option value="SS">Soudan du Sud</option>
+                        <option value="TZ">Tanzanie</option>
+                        <option value="TD">Tchad</option>
+                        <option value="TG">Togo</option>
+                        <option value="TN">Tunisie</option>
+                        <option value="ZM">Zambie</option>
+                        <option value="ZW">Zimbabwe</option>
+                    </select>
                 </div>
 
                 {{-- Plan --}}
@@ -95,7 +130,6 @@
                             <option value="{{ $plan->id }}">{{ $plan->name }} — {{ number_format($plan->price, 0, ',', ' ') }} FCFA/mois</option>
                         @endforeach
                     </select>
-                    @error('plan_id') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 {{-- Statut --}}
@@ -136,7 +170,6 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Nom complet <span class="text-red-500">*</span></label>
                     <input wire:model="admin_name" type="text" placeholder="Jean Kouassi"
                            class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E3A5F]/30 focus:border-[#1E3A5F] @error('admin_name') border-red-300 @else border-gray-200 @enderror">
-                    @error('admin_name') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 {{-- Email admin --}}
@@ -144,7 +177,6 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Email <span class="text-red-500">*</span></label>
                     <input wire:model="admin_email" type="email" placeholder="admin@club.ci"
                            class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E3A5F]/30 focus:border-[#1E3A5F] @error('admin_email') border-red-300 @else border-gray-200 @enderror">
-                    @error('admin_email') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 {{-- Mot de passe --}}
@@ -152,7 +184,6 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Mot de passe <span class="text-red-500">*</span></label>
                     <input wire:model="admin_password" type="password" placeholder="Min. 8 caractères"
                            class="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E3A5F]/30 focus:border-[#1E3A5F] @error('admin_password') border-red-300 @else border-gray-200 @enderror">
-                    @error('admin_password') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
 
             </div>
